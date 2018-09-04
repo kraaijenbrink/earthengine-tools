@@ -108,7 +108,7 @@ function shadeImage(image, dem, visParams, mix){
   if (mix===undefined){var mix = 0.75}
   if (visParams===undefined){throw 'shadeImage requires JSON <visParams> containing min, max and palette'}
   
-  var dem = dem.reproject(image.projection().nominalScale())
+  var dem = dem.reproject(image.projection().crs(),undefined,image.projection().nominalScale())
   var shade = ee.Terrain.hillshade(dem.resample())
   
   var visualized = image.visualize(visParams)
