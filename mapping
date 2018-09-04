@@ -103,7 +103,8 @@ function showBaseList(){
 // function to create hillshaded version of an image using a DEM
 function shadeImage(image, dem, mix, minval, maxval, palcolors){
   
-  var dem   = ee.Image('CGIAR/SRTM90_V4').select('elevation')
+  if (dem===undefined){var dem = ee.Image('CGIAR/SRTM90_V4').select('elevation')}
+  
   var shade = ee.Terrain.hillshade(dem)
   
   var visualized = image.visualize({min:minval, max:maxval, palette:palcolors})
