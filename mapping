@@ -110,7 +110,7 @@ function shadeImage(image, dem, visParams, mix){
   
   // force possible water mask to 0
   //var dem = ee.Image([dem,ee.Image(0)]).reduce(ee.Reducer.mean())
-  var shade = ee.Terrain.hillshade(dem.resample())
+  var shade = ee.Terrain.hillshade(dem)
   
   var visualized = image.visualize(visParams)
   var hsv = visualized.divide(255).rgbToHsv();
