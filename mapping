@@ -109,7 +109,7 @@ function shadeImage(image, dem, visParams, mix){
   if (visParams===undefined){throw 'shadeImage() requires JSON visParams:\n{min, max and palette}'}
   
   // force possible water mask to 0
-  //var dem = ee.Image([dem,ee.Image(0)]).reduce(ee.Reducer.mean())
+  var dem = ee.Image([dem,ee.Image(0)]).reduce(ee.Reducer.mean())
   var shade = ee.Terrain.hillshade(dem)
   
   var visualized = image.visualize(visParams)
