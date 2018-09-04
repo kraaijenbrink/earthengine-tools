@@ -104,7 +104,6 @@ function mergeLandsat(satlist, cloudcov, imageQ, type){
   
   // remove empty dummy image by filtering on band name
   var out = out.filter(ee.Filter.listContains('system:band_names', 'nir'));
-  
   return out;
 }
 
