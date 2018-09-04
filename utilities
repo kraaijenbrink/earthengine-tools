@@ -23,11 +23,6 @@ function getQAFlags(image, start, end, newName) {
 
 
 
-
-
-
-
-
 // ###################################################################################################################
 // Combine image collections of multiple landsat satellites
 // and filter on cloud cover and image quality
@@ -113,7 +108,6 @@ function mergeLandsat(satlist, cloudcov, imageQ, type){
   
   return out;
 };
-
 
 
 
