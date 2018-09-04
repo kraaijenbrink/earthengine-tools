@@ -101,13 +101,16 @@ function showBaseList(){
 
 // ###########################################################################
 // function to create hillshaded version of an image using a DEM
-function shadeImage(image, dem, mix, minval, maxval, palcolors){
+function shadeImage(image, dem, mix, visParams){
   
+  if (image===undefined){throw 'shadeImage requires an image input'}
   if (dem===undefined){var dem = ee.Image('CGIAR/SRTM90_V4').select('elevation')}
+  if (mix===undefined){var mix = 0.75}
+  if (visParams===undefined){throw 'shadeImage requires JSON <visParams> containing min, max and palette'}
   
   var shade = ee.Terrain.hillshade(dem)
   
-  var visualized = image.visualize({min:minval, max:maxval, palette:palcolors})
+  var visualized = image.visualize(visParams)
   var hsv = visualized.divide(255).rgbToHsv();
   var hs  = hsv.select(0, 1)
   var v = shade.divide(255).multiply(mix).add(hsv.select(2).multiply(1-mix))
