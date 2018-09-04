@@ -1,0 +1,129 @@
+// ===============================================================================================
+// Function to calculate a koppen-geiger climate zone map from monthly precip and temperature data
+// input:  monthly climate data with two bands: 'pr' and 'tas' 
+// author: Philip Kraaijenbrink
+//
+
+// palette and names for koppen classification ================================================
+var kopcols = ['#960000','#ff0000','#ffcccc','#ffff64','#ffcc00','#ccaa54','#cc8d14',
+               '#003200','#005000','#007800','#00ff00','#96ff00','#c8ff00','#b46400',
+               '#966400','#5a3c00' ,'#320032','#640064','#c800c8','#c71585','#ff6dff',
+               '#ffb4ff','#e6c8ff','#c8c8c8','#c8b4ff','#9a7fb3','#8859b3',
+               '#6f24b3','#6496ff','#64ffff']
+var kopnames=['Af','Am','Aw','BWk','BWh','BSk','BSh','Cfa','Cfb','Cfc','Csa','Csb',
+               'Csc','Cwa','Cwb','Cwc','Dfa','Dfb','Dfc','Dfd','Dsa','Dsb','Dsc','Dsd',
+               'Dwa','Dwb','Dwc','Dwd','EF','ET']
+var kopval  =Array.apply(null, {length: kopcols.length + 2}).map(Function.call, Number).slice(1,-1)
+
+exports.kopcols = kopcols
+exports.kopnames = kopnames
+exports.kopval = kopval
+
+
+// actual function
+exports.koppenMap = function(climdat){
+
+  var start = ee.Date(climdat.aggregate_min('system:time_start'))
+  var end   = ee.Date(climdat.aggregate_max('system:time_start'))
+  var ydiff = end.difference(start,'year').ceil()
+
+  // average stats
+  var t = climdat.select('tas').mean()                 // average annual T
+  var r = climdat.select('pr').sum().divide(ydiff)     // average annual P sum
+  
+  // prepare separate summer and winter precipitation datasets
+  var north = ee.Image.pixelLonLat().select('latitude').gte(0)
+  var south = ee.Image.pixelLonLat().select('latitude').lt(0)
+  var nsum = climdat.select('pr').filter(ee.Filter.inList('month',[4, 5, 6, 7,8,9])).map(function(x){return x.updateMask(north).set('season','summer')})
+  var nwin = climdat.select('pr').filter(ee.Filter.inList('month',[10,11,12,1,2,3])).map(function(x){return x.updateMask(north).set('season','winter')})
+  var ssum = climdat.select('pr').filter(ee.Filter.inList('month',[10,11,12,1,2,3])).map(function(x){return x.updateMask(south).set('season','summer')})
+  var swin = climdat.select('pr').filter(ee.Filter.inList('month',[4, 5, 6, 7,8,9])).map(function(x){return x.updateMask(south).set('season','winter')})
+  var prs  = nsum.merge(ssum)
+  var prw  = nwin.merge(swin)
+  
+  // calculate Koppen A
+  var A  = climdat.select('tas').min().gte(18)
+  var Af = A.and(climdat.select('pr').min().gte(60))
+  var Am = A.and(climdat.select('pr').min().lt(60)).and(climdat.select('pr').min().gte(ee.Image.constant(100).subtract(r.divide(25))))
+  var Aw = A.and(climdat.select('pr').min().lt(60)).and(climdat.select('pr').min().lt(ee.Image.constant(100).subtract(r.divide(25))))
+  
+  // calculate Koppen B
+  var sumcrit = t.multiply(20).add(280)
+  var wincrit = t.multiply(20)
+  var gencrit = t.multiply(20).add(ee.Number(140))
+  var h = t.gte(18)
+  var k = t.lt(18)
+  var BW =     (prs.sum().gte(r.multiply(0.7)).and(r.lt(sumcrit.multiply(0.5))))
+            .or(prw.sum().gte(r.multiply(0.7)).and(r.lt(wincrit.multiply(0.5))))
+            .or(r.lt(gencrit.multiply(0.5)))
+  var BS =     (prs.sum().gte(r.multiply(0.7)).and(r.gte(sumcrit.multiply(0.5)).and(r.lt(sumcrit))))
+            .or(prw.sum().gte(r.multiply(0.7)).and(r.gte(wincrit.multiply(0.5)).and(r.lt(wincrit))))
+            .or(r.gte(gencrit.multiply(0.5)).and(r.lt(gencrit)))
+  var BWh = BW.and(h)
+  var BSh = BS.and(h)
+  var BWk = BW.and(k)
+  var BSk = BS.and(k)
+  
+  // get subclasses for C and D
+  var s = prs.min().lt(30).and(prs.min().lt(prw.max().divide(3)))
+  var w = prw.min().lt(prs.max().divide(10))
+  var f = ee.Image.constant(1).subtract(s.or(w))
+  var a = climdat.select('tas').max().gte(22)
+  var b = climdat.select('tas').max().lt(22)
+          .and(climdat.select('tas').map(function(x){return x.gte(10)}).sum().gte(4))
+  var c = climdat.select('tas').max().lt(22)
+          .and(climdat.select('tas').map(function(x){return x.gte(10)}).sum().gte(1))
+          .and(climdat.select('tas').map(function(x){return x.gte(10)}).sum().lte(3))
+  var d = climdat.select('tas').min().lt(-38)
+  
+  // get C and D classes and subclasses
+  var C = climdat.select('tas').max().gte(10)
+          .and(climdat.select('tas').min().lt(18))
+          .and(climdat.select('tas').min().gt(-3))
+  var D = climdat.select('tas').max().gte(10)
+          .and(climdat.select('tas').min().lt(-3))
+  var Csa = C.and(s).and(a)
+  var Cwa = C.and(w).and(a)
+  var Cfa = C.and(f).and(a)
+  var Csb = C.and(s).and(b)
+  var Cwb = C.and(w).and(b)
+  var Cfb = C.and(f).and(b)
+  var Csc = C.and(s).and(c)
+  var Cwc = C.and(w).and(c)
+  var Cfc = C.and(f).and(c)
+  var Dsa = D.and(s).and(a)
+  var Dwa = D.and(w).and(a)
+  var Dfa = D.and(f).and(a)
+  var Dsb = D.and(s).and(b)
+  var Dwb = D.and(w).and(b)
+  var Dfb = D.and(f).and(b)
+  var Dsc = D.and(s).and(c)
+  var Dwc = D.and(w).and(c)
+  var Dfc = D.and(f).and(c)
+  var Dsd = D.and(s).and(d)
+  var Dwd = D.and(w).and(d)
+  var Dfd = D.and(f).and(d)
+           
+  // get E class
+  var EF = climdat.select('tas').max().lt(0)
+  var ET = climdat.select('tas').max().lt(10).and(climdat.select('tas').max().gte(0))
+  
+  // combine all classes into single classification
+  var kop = ee.Image.constant(0).int()
+  var kop = kop.where(Af,1).where(Am,2).where(Aw,3)
+              .where(Cfa,8).where(Cfb,9).where(Cfc,10).where(Csa,11).where(Csb,12).where(Csc,13).where(Cwa,14).where(Cwb,15).where(Cwc,16)
+              .where(Dfa,17).where(Dfb,18).where(Dfc,19).where(Dsa,21).where(Dsb,22).where(Dsc,23)
+              .where(Dwa,25).where(Dwb,26).where(Dwc,27).where(Dfd,20).where(Dsd,24).where(Dwd,28)
+              .where(BWk,4).where(BWh,5).where(BSk,6).where(BSh,7)
+              .where(EF,29).where(ET,30)
+              .rename('zones')
+
+  return kop.rename('zones').addBands(t.rename('t_mean')).addBands(r.rename('r_mean'))
+            .set("system:time_start", start)
+            .set("system:time_end", end)
+            .set('class_names', kopnames)
+            .set('class_palette', kopcols)
+  
+};
+
+
