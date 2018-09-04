@@ -1,0 +1,19 @@
+/**
+ * Extract bitpacked flags
+ * image - the band to extract the bits from.
+ * start - the lowest bit to extract
+ * end - the highest bit to extract
+ * newName - a name for the output band.
+ * 
+ * example:   var cirrus = getQABits(mod09ga.select('state_1km'), 8, 9, 'cirrus')
+ */
+exports = function(image, start, end, newName) {
+    var pattern = 0;
+    for (var i = start; i <= end; i++) {
+       pattern += 1 << i;
+    }
+    // Return a single band image of the extracted QA bits, giving the band a new name.
+    return image.select([0], [newName])
+                  .bitwiseAnd(pattern)
+                  .rightShift(start);
+};
