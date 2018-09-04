@@ -17,8 +17,7 @@ function getQAFlags(image, start, end, newName) {
     return image.select([0], [newName])
                   .bitwiseAnd(pattern)
                   .rightShift(start);
-};
-
+}
 
 
 
@@ -107,7 +106,7 @@ function mergeLandsat(satlist, cloudcov, imageQ, type){
   var out = out.filter(ee.Filter.listContains('system:band_names', 'nir'));
   
   return out;
-};
+}
 
 
 
