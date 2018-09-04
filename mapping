@@ -106,7 +106,7 @@ function shadeImage(image, dem, visParams, mix){
   if (image===undefined){throw 'shadeImage requires an image input'}
   if (dem===undefined){var dem = ee.Image('USGS/GMTED2010').select('elevation')} // defaults to USGS/GMTED2010
   if (mix===undefined){var mix = 0.5}
-  if (visParams===undefined){throw 'shadeImage requires JSON visParams\ncontaining {min, max and palette}'}
+  if (visParams===undefined){throw 'shadeImage requires JSON visParams:\n{min, max and palette}'}
   
   //var dem = dem.reproject(image.projection().crs(),undefined,image.projection().nominalScale())
   var shade = ee.Terrain.hillshade(dem.resample())
