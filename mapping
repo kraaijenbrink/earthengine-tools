@@ -104,7 +104,7 @@ function showBaseList(){
 function shadeImage(image, dem, visParams, mix){
   
   if (image===undefined){throw 'shadeImage requires an image input'}
-  if (dem===undefined){var dem = ee.Image('CGIAR/SRTM90_V4').select('elevation')} // defaults to 90 m SRTM
+  if (dem===undefined){var dem = ee.Image('USGS/GMTED2010').select('elevation')} // defaults to 90 m SRTM
   if (mix===undefined){var mix = 0.75}
   if (visParams===undefined){throw 'shadeImage requires JSON <visParams> containing min, max and palette'}
   
