@@ -1,0 +1,174 @@
+// ################################################################################
+// intialize legend container that will fit all legends
+var legcontainer = ui.Panel({
+      style: {position: 'bottom-left', padding: '0', margin: '0'},
+      layout: ui.Panel.Layout.Flow('vertical', false)
+    });
+
+
+// ################################################################################
+// Display a simple legend of class colors
+// Philip Kraaijenbrink
+function classLegend(values, names, colors, title, position, direction){
+  
+  if (names===undefined){throw 'No names defined for legend'};
+  if (colors===undefined){throw 'No colors defined for legend'};
+  if (title===undefined){var title=''};
+  if (position===undefined){var position='bottom-left'};
+  if (direction===undefined){var direction='vertical'};
+  
+  if (direction=='vertical'){
+    var boxmar='0 0 4px 0px';
+    var texmar= '0 0 4px 6px';
+    var legmar='8px 8px 0px 16px';
+    var titalign= 'left';
+  }
+  if (direction=='horizontal'){
+    var boxmar='0 0 8px 10px';
+    var texmar='0 6px 0px 6px';
+    var legmar='8px 8px 0px 18px';
+    var titalign= 'center';
+  }
+  
+  var legend = ui.Panel({
+    style: {padding: '16px'},
+    layout: ui.Panel.Layout.Flow(direction, true)
+  });
+  
+  // Create legend title
+  var legendTitle = ui.Label({
+    value: title,
+    style: {
+      fontWeight: 'bold',
+      fontSize: '14px',
+      textAlign: titalign,
+      margin: legmar,
+      padding: '0',
+    }
+  });
+  legcontainer.add(legendTitle);
+  
+  // function to create single row
+
+  var makeRow = function(name, color, val) {
+    var box  = ui.Label({style: {backgroundColor:color, padding:'6px 8px', margin:boxmar}});
+    if (val===undefined){
+      var text = ui.Label({value: name, style: {margin: texmar, fontSize: '13px'}});
+    }else{
+      var text = ui.Label({value: val+'. '+name, style: {margin: texmar, fontSize: '13px'}});
+    }
+    return ui.Panel({
+      widgets: [box, text],
+      layout: ui.Panel.Layout.Flow('horizontal')
+    });
+  };
+
+  // Loop over names and add to legend
+  for (var i = 0; i < names.length; i++){
+    if (values===undefined){
+      legend.add(makeRow(names[i],colors[i]));
+    } else {
+      legend.add(makeRow(names[i],colors[i], values[i]));
+    }
+  }
+
+  // remove any preexisting container
+  Map.remove(legcontainer);
+  
+  // add legend to container
+  legcontainer.add(legend);
+  
+  // update style
+  legcontainer.style().set({position: position});
+  
+  // add back
+  Map.add(legcontainer);
+  
+}
+
+
+
+
+// ################################################################################
+// Display a simple colorbar legend with min max value
+// Philip Kraaijenbrink
+//
+//
+function rampLegend(palette, minval, maxval, title, position, direction, barwidth){
+  
+  if (palette===undefined){throw 'No palette defined for ramp legend'};
+  if (minval===undefined){var minval=''};
+  if (maxval===undefined){var maxval=''};
+  if (title===undefined){var title=''};
+  if (position===undefined){var position='bottom-left'};
+  if (direction===undefined){var direction='vertical'};
+  if (barwidth===undefined){var barwidth=150};
+  
+  var legmar='8px 8px 0px 8px';
+
+  // change the panel for according to function request
+  legcontainer.style({position: position});
+  
+  var legend = ui.Panel({
+    style: {padding: '8px'},
+    layout: ui.Panel.Layout.Flow('vertical')
+  });
+  
+  // Create legend title
+  var legendTitle = ui.Label({
+    value: title,
+    style: {
+      fontWeight: 'bold',
+      fontSize: '14px',
+      textAlign: 'left',
+      margin: legmar,
+      padding: '0',
+    }
+  });
+  legend.add(legendTitle);
+  
+  // create color bar
+  var labwidth = (barwidth/2).toString() + 'px';
+  var image = ee.Image.pixelLonLat().select(0)
+                .clip(ee.Geometry.Rectangle({ coords: [[0, 0], [100, 10]], geodesic: false }))
+                .visualize({ min: 0, max: 100, palette: palette });
+  var ramp = ui.Thumbnail(image).setParams({dimensions: barwidth.toString(),});
+  var minlab = ui.Label(minval, {margin: '0 0 0 8px',  width: labwidth, textAlign: 'left', fontSize: '12px'});
+  // var midlab = ui.Label((minval+maxval)/2, {margin: '0 0 0 0px',  width: '50px', textAlign: 'center'});
+  var maxlab = ui.Label(maxval, {margin: '0 8px 0 0',  width: labwidth, textAlign: 'right', fontSize: '12px'});
+  var labpan = ui.Panel([minlab, maxlab],  ui.Panel.Layout.Flow('horizontal'), {width:(barwidth+16).toString()+'px'});
+  var ramppanel = ui.Panel({
+    widgets: [ramp, labpan],
+    layout: ui.Panel.Layout.Flow('vertical'),
+    style: {
+      margin: '0',
+    }
+  });
+  legend.add(ramppanel);
+  
+  // remove any preexisting container
+  Map.remove(legcontainer);
+  
+  // add legend to container
+  legcontainer.add(legend);
+  
+  // update style
+  legcontainer.style().set({position: position});
+  
+  // add back
+  Map.add(legcontainer);
+
+}
+
+
+
+
+// ################################################################################
+exports.classLegend = classLegend;
+exports.rampLegend = rampLegend;
+
+
+
+
+
+
