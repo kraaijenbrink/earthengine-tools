@@ -123,6 +123,8 @@ exports.koppenMap = function(climdat){
   var fltr   = kop.updateMask(nanNBH.eq(0)).focal_mode(climdat.first().projection().nominalScale(),'square','meters',1)
   var kop    = kop.add(fltr.mask(1).multiply(kop.eq(0)))
   var kop    = kop.subtract(1)
+  
+  var kop = kop.updateMask(kop.neq(0)).subtract(1)
 
   // generate output
   return kop.rename('zones').addBands(t.rename('t_mean')).addBands(r.rename('r_mean'))
