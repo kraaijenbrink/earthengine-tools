@@ -13,7 +13,7 @@ var kopcols = ['#960000','#ff0000','#ffcccc','#ffff64','#ffcc00','#ccaa54','#cc8
 var kopnames=['Af','Am','Aw','BWk','BWh','BSk','BSh','Cfa','Cfb','Cfc','Csa','Csb',
                'Csc','Cwa','Cwb','Cwc','Dfa','Dfb','Dfc','Dfd','Dsa','Dsb','Dsc','Dsd',
                'Dwa','Dwb','Dwc','Dwd','EF','ET']
-var kopval  =Array.apply(null, {length: kopcols.length + 2}).map(Function.call, Number).slice(1,-1)
+var kopval  =Array.apply(null, {length: kopcols.length}).map(Function.call, Number)
 
 exports.kopcols = kopcols
 exports.kopnames = kopnames
