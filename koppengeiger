@@ -120,7 +120,7 @@ exports.koppenMap = function(climdat){
 
   // fill the occasional nodata pixel using majority kernel
   // var kop = kop.updateMask(kop.neq(0)).subtract(1)
-  var fltr = kop.focal_mode(ee.Image(climdat).projection().nominalScale(),'straight','meters',1)
+  var fltr = kop.focal_mode(climdat.first().projection().nominalScale(),'straight','meters',1)
   var kop = kop.add(fltr.multiply(kop.eq(0)))
   
   // var kop = kopmode
