@@ -118,7 +118,7 @@ exports.koppenMap = function(climdat){
               .where(EF,29).where(ET,30)
               .rename('zones')
 
-  // fill the occasional nodata pixel with neighbour majority 
+  // fill the occasional nodata pixel using majority kernel
   var kopmode = kop.focal_mode(3, 'square', 'pixels', 1).multiply(kop.eq(0))
   var kop = kop.add(kopmode)
 
