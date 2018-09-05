@@ -123,8 +123,8 @@ exports.koppenMap = function(climdat){
   // var fltr = kop.focal_mode(climdat.first().projection().nominalScale(),'square','meters',1)
   // var kop = kop.add(fltr.multiply(kop.eq(0)))
   
-  //var kop = kop.updateMask(kop.eq(0)).focal_max(climdat.first().projection().nominalScale(),'square','meters',1)
-  
+ // var kop = kop.updateMask(kop.eq(0)).focal_max(climdat.first().projection().nominalScale(),'square','meters',1)
+  var kop = kop.updateMask(kop.eq(0))
   // var kop = kopmode
 
   return kop.rename('zones').addBands(t.rename('t_mean')).addBands(r.rename('r_mean'))
