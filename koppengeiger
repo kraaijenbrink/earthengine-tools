@@ -119,9 +119,7 @@ exports.koppenMap = function(climdat){
               .rename('zones')
 
   // fill the occasional nodata pixel using majority kernel
-  
-  var kopmode = kop.focal_mode(3, 'square', 'pixels', 1).multiply(kop.eq(0))
-  var kop = kop.add(kopmode)
+  var kop = kop.updateMask(kop.eq(1))
   // var kop = kopmode
 
   return kop.rename('zones').addBands(t.rename('t_mean')).addBands(r.rename('r_mean'))
