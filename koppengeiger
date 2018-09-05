@@ -130,7 +130,7 @@ exports.koppenMap = function(climdat){
             .set("system:time_end", end)
             .set('class_names', kopnames)
             .set('class_palette', kopcols)
-            .reproject(climdat.first().projection().crs(), undefined, climdat.first().projection().nominalScale())
+            //.reproject(climdat.first().projection().crs(), undefined, climdat.first().projection().nominalScale())
   
 };
 
