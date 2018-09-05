@@ -10,10 +10,10 @@ var kopcols = ['#960000','#ff0000','#ffcccc','#ffff64','#ffcc00','#ccaa54','#cc8
                '#966400','#5a3c00' ,'#320032','#640064','#c800c8','#c71585','#ff6dff',
                '#ffb4ff','#e6c8ff','#c8c8c8','#c8b4ff','#9a7fb3','#8859b3',
                '#6f24b3','#6496ff','#64ffff']
-var kopnames=['Af','Am','Aw','BWk','BWh','BSk','BSh','Cfa','Cfb','Cfc','Csa','Csb',
+var kopnames= ['Af','Am','Aw','BWk','BWh','BSk','BSh','Cfa','Cfb','Cfc','Csa','Csb',
                'Csc','Cwa','Cwb','Cwc','Dfa','Dfb','Dfc','Dfd','Dsa','Dsb','Dsc','Dsd',
                'Dwa','Dwb','Dwc','Dwd','EF','ET']
-var kopvals  =Array.apply(null, {length: kopcols.length}).map(Function.call, Number)
+var kopvals = Array.apply(null, {length: kopcols.length}).map(Function.call, Number)
 
 exports.kopcols = kopcols
 exports.kopnames = kopnames
