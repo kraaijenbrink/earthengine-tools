@@ -118,10 +118,10 @@ exports.koppenMap = function(climdat){
               .where(EF,29).where(ET,30)
               .rename('zones')
 
-  // fill the occasional nodata pixel using majority kernel
+  // fill the occasional nodata pixel using a majority kernel
   var nanNBH = kop.updateMask(kop.eq(0)).focal_max(climdat.first().projection().nominalScale(),'square','meters',1)
   var fltr   = kop.updateMask(nanNBH.eq(0)).focal_mode(climdat.first().projection().nominalScale(),'square','meters',1)
-  var kop    = kop.add(fltr.multiply(kop.eq(0)))
+  var kop    = kop.add(fltr.mask(0).multiply(kop.eq(0)))
   var kop    = kop.subtract(1)
 
   // generate output
