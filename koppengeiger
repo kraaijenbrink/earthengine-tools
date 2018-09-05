@@ -120,7 +120,7 @@ exports.koppenMap = function(climdat){
 
   // fill occasional pixels with nodata with neighbour majority 
   var kopzero = kop.updateMask(kop.eq(0))
-  var kopmode = kop.focal_mode(3, 'square', 'pixel', 1).updateMask(kop.eq(0))
+  var kopmode = kop.focal_mode(3, 'square', 'pixels', 1).updateMask(kop.eq(0))
   var kop = ee.Image([kop,kopmode]).reduce(ee.Reducer.first())
   
 
