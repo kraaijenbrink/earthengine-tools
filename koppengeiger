@@ -122,7 +122,7 @@ exports.koppenMap = function(climdat){
   // var kopzero = kop.updateMask(kop.eq(0))
   // var kopmode = kop.focal_mode(3, 'square', 'pixels', 1).updateMask(kop.eq(0))
   // var kop = ee.Image([kopmode,kop]).reduce(ee.Reducer.sum())
-  var kop = kop.updateMask(kop.eq(0))
+  var kop = kop.updateMask(kop.neq(0))
 
 
   return kop.rename('zones').addBands(t.rename('t_mean')).addBands(r.rename('r_mean'))
