@@ -17,7 +17,7 @@ var kopvals  =Array.apply(null, {length: kopcols.length}).map(Function.call, Num
 
 exports.kopcols = kopcols
 exports.kopnames = kopnames
-exports.kopvals = kopval
+exports.kopvals = kopvals
 
 
 // actual function
