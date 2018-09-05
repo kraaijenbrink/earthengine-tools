@@ -118,12 +118,9 @@ exports.koppenMap = function(climdat){
               .where(EF,29).where(ET,30)
               .rename('zones')
 
-  // fill occasional pixels with nodata with neighbour majority 
-  // var kopzero = kop.updateMask(kop.eq(0))
-  var kopmode = kop.focal_mode(3, 'square', 'pixels', 1)
-  var kop = ee.Image([kopmode,kop.updateMask(kop.neq(0))]).reduce(ee.Reducer.first())
-  var kop = kop.updateMask(kop.neq(0))
-
+  // fill the occasional nodata pixel with neighbour majority 
+  var kopmode = kop.focal_mode(3, 'square', 'pixels', 1).multiply(kop.eq(0))
+  var kop = kop.add(kopmode)
 
   return kop.rename('zones').addBands(t.rename('t_mean')).addBands(r.rename('r_mean'))
             .set("system:time_start", start)
