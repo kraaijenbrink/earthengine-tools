@@ -124,7 +124,7 @@ exports.koppenMap = function(climdat){
   var kop    = kop.where(kop.eq(0), fltr)
   var kop    = kop.subtract(1)
   
-  var kop = kop.updateMask(kop.neq(0)).subtract(1)
+ // var kop = kop.updateMask(kop.neq(0)).subtract(1)
 
   // generate output
   return kop.rename('zones').addBands(t.rename('t_mean')).addBands(r.rename('r_mean'))
