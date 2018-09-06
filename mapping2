@@ -12,20 +12,21 @@ Philip Kraaijenbrink
 var snazzykey = '610616e0-8801-408d-be04-1caf132cc14f'
 
 
-var getJSON = function(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.responseType = 'json';
-    xhr.onload = function() {
-      var status = xhr.status;
-      if (status === 200) {
-        callback(null, xhr.response);
-      } else {
-        callback(status, xhr.response);
-      }
+function getJSON(url, success) {
+
+    var ud = '_' + +new Date,
+        script = document.createElement('script'),
+        head = document.getElementsByTagName('head')[0] 
+               || document.documentElement;
+
+    window[ud] = function(data) {
+        head.removeChild(script);
+        success && success(data);
     };
-    xhr.send();
-};
+
+    script.src = url.replace('callback=?', 'callback=' + ud);
+    head.appendChild(script);
+}
 
 var snazzyfav = getJSON('https://snazzymaps.com/explore.json?key=610616e0-8801-408d-be04-1caf132cc14f')
 print(snazzyfav)
