@@ -9,7 +9,10 @@ Philip Kraaijenbrink
 
 */
 
-var snazzykey = '610616e0-8801-408d-be04-1caf132cc14f'
+var snazzykey  = '610616e0-8801-408d-be04-1caf132cc14f'
+
+var snazzyfavs = 
+
 
 // ###########################################################################
 // function to set a single custom map style with toggle for roadmap, terrain and satellite
