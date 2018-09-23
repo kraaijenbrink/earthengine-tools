@@ -113,5 +113,5 @@ function mergeLandsat(satlist, cloudcov, imageQ, type){
 
 // ###################################################################################################################
 
-exports.getQAFlags = getQAFlags
+exports.getQAFlags   = getQAFlags
 exports.mergeLandsat = mergeLandsat
