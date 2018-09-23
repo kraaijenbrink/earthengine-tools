@@ -1,5 +1,6 @@
-// function to activate tasks in task list
+// function to activate tasks in web client task list
 // Code taken from forum by kongdd.sysu
+//
 /*
 - 1. generate the tasks in earth engine script,
 - 2. open console of the browser (F12 in chrome and firefox)
