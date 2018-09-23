@@ -102,7 +102,7 @@ function getPalette(name,n, reverse){
   if (Palettes[name] === undefined){
     throw 'Palette "'+name+'" does not exist.\nUse allPalettes() to browse the available palettes.\n\nValid names are: '+Object.keys(Palettes)
   } else if (Object.keys(Palettes[name]).indexOf(n.toString()) == -1){
-    throw 'Palette "'+name+'" does not have the option "'+n.toString()+'".\nAvailable options are: '+Object.keys(Palettes['Set1'])
+    throw 'Palette "'+name+'" does not have the option "'+n.toString()+'".\nAvailable options are: '+Object.keys(Palettes[name])
   } else {
     if (reverse===true){
       return Palettes[name][n].reverse()
