@@ -6,7 +6,7 @@
  * end - the highest bit to extract
  * newName - a name for the output band.
  * 
- * example:   var cirrus = getQABits(mod09ga.select('state_1km'), 8, 9, 'cirrus')
+ * example:   var cirrus = getQAFlags(mod09ga.select('state_1km'), 8, 9, 'cirrus')
  */
 function getQAFlags(image, start, end, newName) {
     var pattern = 0;
@@ -96,7 +96,7 @@ function mergeLandsat(satlist, cloudcov, imageQ, type){
   // create empty collection with a dummy image
   var out = ee.ImageCollection(ee.Image().select());       
   
-  // merge collections based 'satlist' argument
+  // merge collections based on 'satlist' argument
   if (satlist.indexOf(4) > -1){var out = out.merge(ls4)}
   if (satlist.indexOf(5) > -1){var out = out.merge(ls5)}
   if (satlist.indexOf(7) > -1){var out = out.merge(ls7)}
