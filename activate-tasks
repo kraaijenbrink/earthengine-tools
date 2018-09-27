@@ -4,7 +4,8 @@
 /*
 - 1. generate the tasks in earth engine script,
 - 2. open console of the browser (F12 in chrome and firefox)
-- 3. paste code below
+- 3. wait for all run buttons to populate
+- 4. run code below
 */
 function runTaskList() {
     var tasklist = document.getElementsByClassName('awaiting-user-config');
