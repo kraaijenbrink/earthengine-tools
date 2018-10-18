@@ -111,7 +111,7 @@ function shadeImage(image, dem, visParams, mix){
   if (visParams===undefined){throw 'shadeImage() requires JSON visParams:\n{min, max and palette}'}
   
   var dem = ee.Image([dem,ee.Image(0)]).reduce(ee.Reducer.first())
-  var shade = ee.Terrain.hillshade(dem)
+  var shade = ee.Terrain.hillshade(dem,315)
   
   var visualized = image.visualize(visParams)
   var hsv = visualized.divide(255).rgbToHsv();
