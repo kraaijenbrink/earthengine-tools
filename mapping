@@ -103,15 +103,16 @@ function showBaseList(){
 
 // ###########################################################################
 // function to create hillshaded version of an image using a DEM
-function shadeImage(image, dem, visParams, mix){
+function shadeImage(image, dem, visParams, mix, azimuth){
   
   if (image===undefined){throw 'shadeImage requires an image input'}
   if (dem===undefined){var dem = ee.Image('USGS/GMTED2010').select('elevation')} // defaults to USGS/GMTED2010
   if (mix===undefined){var mix = 0.5}
   if (visParams===undefined){throw 'shadeImage() requires JSON visParams:\n{min, max and palette}'}
+  if (azimuth===undefined){var azimuth = 315}
   
   var dem = ee.Image([dem,ee.Image(0)]).reduce(ee.Reducer.first())
-  var shade = ee.Terrain.hillshade(dem,315)
+  var shade = ee.Terrain.hillshade(dem,azimuth)
   
   var visualized = image.visualize(visParams)
   var hsv = visualized.divide(255).rgbToHsv();
