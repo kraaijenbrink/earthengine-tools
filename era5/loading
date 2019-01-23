@@ -22,12 +22,12 @@ var yearcol    = years.map(function(x){
              .set('system:index', ee.Date(sdate.advance(x,'day')).format('yyyyDDD'))
   })
   return(sepimg)
-}).flatten()
+})
+yearcol = ee.ImageCollection.fromImages(yearcol.flatten())
 print(yearcol)
 
 
 
-print(sdate)
 // var scagstack = ee.Image(years.iterate(function(x,y){
 //   return ee.Image(y).addBands(scag.filterDate(ee.Date.fromYMD(x,1,1), ee.Date.fromYMD(x,12,31)).first())
 // }, ee.Image([])))
