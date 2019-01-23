@@ -10,7 +10,8 @@ var collection = ee.ImageCollection('users/philipkraaijenbrink/climate-data/era5
 var years      = ee.List(collection.aggregate_array('year'))
 var yearcol    = years.map(function(x){
   var year     = ee.Number(x)
-  var yearimg  = collection.filterDate(year).first()
+  var sdate    = ee.Date.fromYMD(year,1,1)
+  var yearimg  = collection.filterDate(sdate).first()
   var nbands   = yearimg.bandNames().size()
   var bandseq  = ee.List.sequence(0,nbands.subtract(1))
   var sepimg   = bandseq.map(function(x){
@@ -19,10 +20,12 @@ var yearcol    = years.map(function(x){
     return ee.Image(yearimg.select(i))
              .set('system:time_start',ee.Date(sdate.advance(x,'day')))
              .set('system:index', ee.Date(sdate.advance(x,'day')).format('yyyyDDD'))
-// }))
-})
+  })
+  return(sepimg)
+}).flatten()
+print(yearcol)
 
-var sdate      = ee.Date.fromYMD(years.get(0),1,1)
+
 
 print(sdate)
 // var scagstack = ee.Image(years.iterate(function(x,y){
