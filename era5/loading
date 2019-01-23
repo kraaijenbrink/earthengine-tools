@@ -24,7 +24,8 @@ var eracol  = ee.ImageCollection.fromImages(bandseq.map(function(x){
             .set('system:index', curdat.format('yyyyDDD'))
             .set('date', curdat.format('yyyy-MM-dd'))
 })).filterDate(sdate,edate)
-return eracol
+
+print(eracol)
 
 
 
