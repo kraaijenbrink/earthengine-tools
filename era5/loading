@@ -5,7 +5,7 @@
 
 var dataset = '2m-temperature_daymean'
 var sdate   = '2010-01-01'
-var edate   = '2018-12-31'
+var edate   = '2010-01-15'
   
 var collection = ee.ImageCollection('users/philipkraaijenbrink/climate-data/era5/daily/'+dataset)
                    .filterDate(sdate,edate)
