@@ -17,14 +17,15 @@ var yearcol    = years.map(function(x){
   var sepimg   = bandseq.map(function(x){
     var i = ee.Number(x)
     var curdat = sdate.advance(i,'day')
-    return ee.Image(yearimg.select(i))
+    return ee.Image(yearimg.select(i)).rename([yearimg.get('shortname')])
              .set('system:time_start',ee.Date(sdate.advance(x,'day')))
              .set('system:index', ee.Date(sdate.advance(x,'day')).format('yyyyDDD'))
+             .set('date', ee.Date(sdate.advance(x,'day')).format('yyyyMMMMdd'))
   })
   return(sepimg)
 })
 yearcol = ee.ImageCollection.fromImages(yearcol.flatten())
-print(yearcol)
+print(yearcol.filterDate('2002-01-05','2002-06-01'))
 
 
 
