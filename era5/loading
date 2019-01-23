@@ -1,4 +1,40 @@
-exports.loadDailyERA5 = loadDailyERA5
+// exports.loadDailyERA5 = loadDailyERA5
 
 // load daily era interim data
-function loadDailyERA5(variable, stat)
+// function loadDailyERA5(variable, stat)
+
+var variable  = '2m-temperature'
+var statistic = 'daymean'
+
+var collection = ee.ImageCollection('users/philipkraaijenbrink/climate-data/era5/daily/'+variable+'_'+statistic)
+var years      = ee.List(collection.aggregate_array('year'))
+var yearcol    = years.map(function(x){
+  var year     = ee.Number(x)
+  var yearimg  = collection.filterDate(year).first()
+  var nbands   = yearimg.bandNames().size()
+  var bandseq  = ee.List.sequence(0,nbands.subtract(1))
+  var sepimg   = bandseq.map(function(x){
+    var i = ee.Number(x)
+    var curdat = sdate.advance(i,'day')
+    return ee.Image(yearimg.select(i))
+             .set('system:time_start',ee.Date(sdate.advance(x,'day')))
+             .set('system:index', ee.Date(sdate.advance(x,'day')).format('yyyyDDD'))
+// }))
+})
+
+var sdate      = ee.Date.fromYMD(years.get(0),1,1)
+
+print(sdate)
+// var scagstack = ee.Image(years.iterate(function(x,y){
+//   return ee.Image(y).addBands(scag.filterDate(ee.Date.fromYMD(x,1,1), ee.Date.fromYMD(x,12,31)).first())
+// }, ee.Image([])))
+// var nbands = scagstack.bandNames().size()
+// var bandseq = ee.List.sequence(0,nbands.subtract(1))
+// var scagcol = ee.ImageCollection.fromImages(bandseq.map(function(x){
+//   var i = ee.Number(x)
+//   var curdat = sdate.advance(i,'day')
+//   return ee.Image(scagstack.select(i)).rename('snow_fraction')
+//           .set('system:time_start',ee.Date(sdate.advance(x,'day')))
+//           .set('system:index', ee.Date(sdate.advance(x,'day')).format('yyyyDDD'))
+// }))
+
