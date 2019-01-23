@@ -27,7 +27,7 @@ var yearcol    = years.map(function(x){
 yearcol = ee.ImageCollection.fromImages(yearcol.flatten())
 print(yearcol.filterDate('2002-01-05','2002-06-01'))
 
-
+Map.addLayer(yearcol.first())
 
 // var scagstack = ee.Image(years.iterate(function(x,y){
 //   return ee.Image(y).addBands(scag.filterDate(ee.Date.fromYMD(x,1,1), ee.Date.fromYMD(x,12,31)).first())
