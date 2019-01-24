@@ -1,32 +1,33 @@
 // exports.loadDailyERA5 = loadDailyERA5
 
 // load daily era interim data
-// function loadDailyERA5(dataset, sdate, edate)
+function loadDailyERA5(dataset, sdate, edate){
 
-var dataset = '2m-temperature_daymean'
-var sdate   = '2010-01-01'
-var edate   = '2010-01-15'
-  
-var collection = ee.ImageCollection('users/philipkraaijenbrink/climate-data/era5/daily/'+dataset)
-                   .filterDate(sdate,edate)
-var years     = ee.List(collection.aggregate_array('year'))
-var fdate     = ee.Date.fromYMD(years.get(0),1,1)
-var yearstack = ee.Image(years.iterate(function(x,y){
-  return ee.Image(y).addBands(collection.filterDate(ee.Date.fromYMD(x,1,1), ee.Date.fromYMD(x,12,31)).first())
-}, ee.Image([])))
-var nbands  = yearstack.bandNames().size()
-var bandseq = ee.List.sequence(0,nbands.subtract(1))
-var eracol  = ee.ImageCollection.fromImages(bandseq.map(function(x){
-  var i = ee.Number(x)
-  var curdat = fdate.advance(i,'day')
-  return ee.Image(yearstack.select(i)).rename([collection.first().get('shortname')])
-            .set('system:time_start',curdat)
-            .set('system:index', curdat.format('yyyyDDD'))
-            .set('date', curdat.format('yyyy-MM-dd'))
-})).filterDate(sdate,edate)
-print(collection.first().projection().nominalScale())
-print(eracol)
-
+  // var dataset = '2m-temperature_daymean'
+  // var sdate   = '2010-01-01'
+  // var edate   = '2010-01-15'
+    
+  var collection = ee.ImageCollection('users/philipkraaijenbrink/climate-data/era5/daily/'+dataset)
+                     .filterDate(sdate,edate)
+  var years     = ee.List(collection.aggregate_array('year'))
+  var fdate     = ee.Date.fromYMD(years.get(0),1,1)
+  var yearstack = ee.Image(years.iterate(function(x,y){
+    return ee.Image(y).addBands(collection.filterDate(ee.Date.fromYMD(x,1,1), ee.Date.fromYMD(x,12,31)).first())
+  }, ee.Image([])))
+  var nbands  = yearstack.bandNames().size()
+  var bandseq = ee.List.sequence(0,nbands.subtract(1))
+  var eracol  = ee.ImageCollection.fromImages(bandseq.map(function(x){
+    var i = ee.Number(x)
+    var curdat = fdate.advance(i,'day')
+    return ee.Image(yearstack.select(i)).rename([collection.first().get('shortname')])
+              .set('system:time_start',curdat)
+              .set('system:index', curdat.format('yyyyDDD'))
+              .set('date', curdat.format('yyyy-MM-dd'))
+  })).filterDate(sdate,edate)
+  // print(collection.first().projection().nominalScale())
+  // print(eracol)
+  return(eracol)
+}
 
 
 
