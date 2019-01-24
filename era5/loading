@@ -1,4 +1,4 @@
-// exports.loadDailyERA5 = loadDailyERA5
+exports.loadDailyERA5 = loadDailyERA5
 
 // load daily era interim data
 function loadDailyERA5(dataset, sdate, edate){
