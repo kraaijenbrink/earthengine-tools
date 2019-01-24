@@ -1,7 +1,7 @@
 // exports.loadDailyERA5 = loadDailyERA5
 
 // load daily era interim data
-// function loadDailyERA5(variable, stat, sdate, edate)
+// function loadDailyERA5(dataset, sdate, edate)
 
 var dataset = '2m-temperature_daymean'
 var sdate   = '2010-01-01'
@@ -24,8 +24,9 @@ var eracol  = ee.ImageCollection.fromImages(bandseq.map(function(x){
             .set('system:index', curdat.format('yyyyDDD'))
             .set('date', curdat.format('yyyy-MM-dd'))
 })).filterDate(sdate,edate)
-
+print(collection.first().projection().nominalScale())
 print(eracol)
+
 
 
 
