@@ -73,7 +73,7 @@ function classLegend(values, names, colors, title, position, direction){
   }
 
   // remove any preexisting container
-  Map.remove(legcontainer);
+  // Map.remove(legcontainer);
   
   // add legend to container
   legcontainer.add(legend);
