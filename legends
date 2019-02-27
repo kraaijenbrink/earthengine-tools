@@ -147,7 +147,7 @@ function rampLegend(palette, minval, maxval, title, position, direction, barwidt
   legend.add(ramppanel);
   
   // remove any preexisting container
-  Map.remove(legcontainer);
+  // Map.remove(legcontainer);
   
   // add legend to container
   legcontainer.add(legend);
